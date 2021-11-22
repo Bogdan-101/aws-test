@@ -1,12 +1,12 @@
 /node_modules/
 /build/
 /lib/
-/dist/
 /docs/
+/dist/
 .idea/*
 
-.DS_Store
-coverage
-*.log
 
+# Elastic Beanstalk Files
 .elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
