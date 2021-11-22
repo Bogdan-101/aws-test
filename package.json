@@ -5,8 +5,8 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
-    "build": "tsc",
-    "start": "npm i && npm run build  && ls && node dist/index.js",
+    "build": "npm i && tsc",
+    "start": "npm run build && node dist/index.js",
     "start:dev": "ts-node src/index.ts"
   },
   "repository": {
