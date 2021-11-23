@@ -7,8 +7,8 @@ import {
 import { BUCKET_NAME, s3 } from "../s3bucket";
 import {AWSError} from "aws-sdk";
 import {GetObjectOutput} from "aws-sdk/clients/s3";
-// import { AWSError } from "aws-sdk";
-// import { GetObjectOutput } from "aws-sdk/clients/s3";
+// import {AWSError} from "aws-sdk";
+// import {GetObjectOutput} from "aws-sdk/clients/s3";
 
 const multer = require("multer");
 const multerS3 = require("multer-s3");
@@ -53,14 +53,11 @@ const categoryApi = (app: express.Application, db: any) => {
           const avatarPath = user?.get({plain: true}).avatarPath;
 
           const params = { Bucket: BUCKET_NAME, Key: avatarPath };
-          s3.getObject(params, function(err:AWSError, data: GetObjectOutput) {
+          s3.getObject(params, function (err:AWSError, data: GetObjectOutput) {
             if (err) {
-              res.send('An error occurred');
+              return res.send({ "error": err });
             }
-
-            res.writeHead(200, {'Content-Type': 'image/jpeg'});
-            res.write(data.Body, 'binary');
-            res.end(null, 'binary');
+            return res.send({ data });
           });
         }
       );
