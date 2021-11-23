@@ -1,26 +1,26 @@
 import express from "express";
-import fs from "fs";
 import { Model } from "sequelize";
 import {
   UserAvatarAttributes,
   UserAvatarCreationAttributes,
 } from "../models/userAvatar";
+import {BUCKET_NAME, s3} from "../s3bucket";
 
 const multer = require("multer");
-
-const storage = multer.diskStorage({
-  destination: function (_req: any, _file: any, cb: Function) {
-    cb(null, `./public/images/`);
-  },
-  filename: function (_req: any, file: any, cb: Function) {
-    cb(null, `${Date.now().toString()}-${file.originalname}`);
-  },
-});
+const multerS3 = require('multer-s3')
 
 const upload = multer({
-  storage: storage,
-  limits: { fileSize: 1024 * 1024 * 5 },
-});
+  storage: multerS3({
+    s3: s3,
+    bucket: BUCKET_NAME,
+    metadata: function (_req: any, file: any, cb: Function) {
+      cb(null, {fieldName: file.fieldname});
+    },
+    key: function (_req: any, _file: any, cb: Function) {
+      cb(null, Date.now().toString())
+    }
+  })
+})
 
 const categoryApi = (app: express.Application, db: any) => {
   app.get("/userAvatar", (_req: express.Request, res: express.Response) =>
@@ -46,26 +46,15 @@ const categoryApi = (app: express.Application, db: any) => {
     "/userAvatar",
     upload.single("file"),
     (req: express.Request, res: express.Response) => {
-      // @ts-ignore
-      const file = global.appRoot + "/public/images/" + req.file.filename;
-      console.log("FILE: ", file);
-      // @ts-ignore
-      fs.rename(req.file.path, file, function (err) {
-        if (err) {
-          console.log(err);
-          res.send(500);
-        } else {
-          db.UserAvatar.create({
-            userId: req.body.userId,
-            // @ts-ignore
-            avatarPath: req.file.filename,
-          }).then(
-            (r: Model<UserAvatarAttributes, UserAvatarCreationAttributes>) => {
-              res.send(r.get({ plain: true }));
-            }
-          );
+      db.UserAvatar.create({
+        userId: req.body.userId,
+        // @ts-ignore
+        avatarPath: req.file.filename,
+      }).then(
+        (r: Model<UserAvatarAttributes, UserAvatarCreationAttributes>) => {
+          res.send(r.get({ plain: true }));
         }
-      });
+      );
     }
   );
 };

@@ -24,9 +24,11 @@
   "homepage": "https://github.com/Bogdan-101/aws-test#readme",
   "dependencies": {
     "@types/sequelize": "^4.28.10",
+    "aws-sdk": "^2.1034.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "multer": "^1.4.2",
+    "multer-s3": "^2.10.0",
     "nodemon": "^2.0.15",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
