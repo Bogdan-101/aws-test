@@ -5,7 +5,7 @@ import {
   UserAvatarCreationAttributes,
 } from "../models/userAvatar";
 import { BUCKET_NAME, s3 } from "../s3bucket";
-import AWS, {AWSError} from "aws-sdk";
+import {AWSError} from "aws-sdk";
 import {GetObjectOutput} from "aws-sdk/clients/s3";
 
 const multer = require("multer");
@@ -50,16 +50,14 @@ const categoryApi = (app: express.Application, db: any) => {
 
           const avatarPath = user?.get({plain: true}).avatarPath;
 
-          const s3 = new AWS.S3({
-            accessKeyId: process.env.S3_ID,
-            secretAccessKey: process.env.S3_SECRET,
-          });
-
-          s3.getObject({ Bucket: BUCKET_NAME, Key: avatarPath || '' }, function (err:AWSError, data: GetObjectOutput) {
+          const params = { Bucket: BUCKET_NAME, Key: avatarPath };
+          s3.getObject(params, function(err: AWSError, data: GetObjectOutput) {
             if (err) {
-              return res.send({ "error": err });
+              res.send({error: err})
             }
-            return res.send({ data });
+            res.writeHead(200, {'Content-Type': 'image/jpeg'});
+            res.write(data.Body, 'binary');
+            res.end(null, 'binary');
           });
         }
       );

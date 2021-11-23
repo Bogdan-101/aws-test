@@ -4,6 +4,16 @@ import db from './models/sequelize';
 import cors from "cors";
 import path from "path";
 
+require('dotenv').config();
+const AWS = require('aws-sdk');
+const SESConfig = {
+    apiVersion: "2021-11-23",
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    accessSecretKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: "us-east-2"
+}
+AWS.config.update(SESConfig);
+
 const app: Application = express();
 const port = process.env.PORT || 8000;
 
