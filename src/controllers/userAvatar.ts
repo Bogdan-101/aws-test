@@ -16,8 +16,8 @@ const upload = multer({
     metadata: function (_req: any, file: any, cb: Function) {
       cb(null, {fieldName: file.fieldname});
     },
-    key: function (_req: any, _file: any, cb: Function) {
-      cb(null, Date.now().toString())
+    key: function (_req: any, file: any, cb: Function) {
+      cb(null, `${Date.now().toString()}-${file.originalname}`)
     }
   })
 })
@@ -49,7 +49,7 @@ const categoryApi = (app: express.Application, db: any) => {
       db.UserAvatar.create({
         userId: req.body.userId,
         // @ts-ignore
-        avatarPath: req.file.originalname,
+        avatarPath: req.file.key,
       }).then(
         (r: Model<UserAvatarAttributes, UserAvatarCreationAttributes>) => {
           res.send(r.get({ plain: true }));
