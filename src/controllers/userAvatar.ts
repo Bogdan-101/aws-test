@@ -5,8 +5,8 @@ import {
   UserAvatarCreationAttributes,
 } from "../models/userAvatar";
 import { BUCKET_NAME, s3 } from "../s3bucket";
-import {AWSError} from "aws-sdk";
-import {GetObjectOutput} from "aws-sdk/clients/s3";
+// import {AWSError} from "aws-sdk";
+// import {GetObjectOutput} from "aws-sdk/clients/s3";
 
 const multer = require("multer");
 const multerS3 = require("multer-s3");
@@ -49,6 +49,8 @@ const categoryApi = (app: express.Application, db: any) => {
           }
 
           const avatarPath = user?.get({plain: true}).avatarPath;
+
+          res.send(avatarPath);
 
           // const params = { Bucket: BUCKET_NAME, Key: avatarPath };
           // s3.getObject(params, function (err:AWSError, data: GetObjectOutput) {
