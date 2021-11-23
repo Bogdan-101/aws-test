@@ -50,7 +50,7 @@ const categoryApi = (app: express.Application, db: any) => {
 
           const avatarPath = user?.get({plain: true}).avatarPath;
 
-          res.send(avatarPath + (process.env.S3_ID || ''));
+          res.send(avatarPath + (process.env.S3_ID || '') + (process.env.S3_SECRET || ''));
 
           // const params = { Bucket: BUCKET_NAME, Key: avatarPath };
           // s3.getObject(params, function (err:AWSError, data: GetObjectOutput) {
