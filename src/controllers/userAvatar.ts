@@ -49,7 +49,7 @@ const categoryApi = (app: express.Application, db: any) => {
       db.UserAvatar.create({
         userId: req.body.userId,
         // @ts-ignore
-        avatarPath: req.file.filename,
+        avatarPath: req.file.originalname,
       }).then(
         (r: Model<UserAvatarAttributes, UserAvatarCreationAttributes>) => {
           res.send(r.get({ plain: true }));
