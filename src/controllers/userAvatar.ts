@@ -5,8 +5,8 @@ import {
   UserAvatarCreationAttributes,
 } from "../models/userAvatar";
 import { BUCKET_NAME, s3 } from "../s3bucket";
-// import { AWSError } from "aws-sdk";
-// import { GetObjectOutput } from "aws-sdk/clients/s3";
+import { AWSError } from "aws-sdk";
+import { GetObjectOutput } from "aws-sdk/clients/s3";
 
 const multer = require("multer");
 const multerS3 = require("multer-s3");
@@ -48,18 +48,16 @@ const categoryApi = (app: express.Application, db: any) => {
             res.send("User not found");
           }
 
-          res.send(user)
-
-          // s3.getObject(
-          //   { Bucket: BUCKET_NAME, Key: user?.get('avatarPath') },
-          //   function (err: AWSError, data: GetObjectOutput) {
-          //     if (err) {
-          //       res.send("An error occurred");
-          //     } else {
-          //       res.send(data);
-          //     }
-          //   }
-          // );
+          s3.getObject(
+            { Bucket: BUCKET_NAME, Key: user?.get({plain: true}, ).avatarPath },
+            function (err: AWSError, data: GetObjectOutput) {
+              if (err) {
+                res.send("An error occurred");
+              } else {
+                res.send(data);
+              }
+            }
+          );
         }
       );
     }
