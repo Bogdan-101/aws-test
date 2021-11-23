@@ -50,18 +50,16 @@ const categoryApi = (app: express.Application, db: any) => {
 
           const avatarPath = user?.get({plain: true}).avatarPath;
 
-          res.send(avatarPath)
-
-          // s3.getObject(
-          //   { Bucket: BUCKET_NAME, Key: avatarPath },
-          //   function (err: AWSError, data: GetObjectOutput) {
-          //     if (err) {
-          //       res.send("An error occurred");
-          //     } else {
-          //       res.send(data);
-          //     }
-          //   }
-          // );
+          s3.getObject(
+            { Bucket: BUCKET_NAME, Key: avatarPath },
+            function (err: AWSError, data: GetObjectOutput) {
+              if (err) {
+                res.send("An error occurred");
+              } else {
+                res.send(data);
+              }
+            }
+          );
         }
       );
     }
